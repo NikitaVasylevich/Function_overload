@@ -9,13 +9,17 @@ void FillRand(double arr[], const int n);
 void FillRand(int arr[ROWS][COLS], const int ROWS,const int COLS);
 void FillRand(float frr[], const int m);
 void FillRand(char crr[], const int s);
-void OfsetLeft(int arr[], const int n);
-void OfsetLeft(double arr[], const int n);	 /* Вопрос #1 к Олегу Анатольевичу :
-											почему программа работает с обявлением "arr" конкретно здесь, после "double", 
-											ведь в реализации прописан массив с именем "brr", и по логике следовало бы объявлять
-											: void OfsetLeft(double brr[], const int n) */
-void OfsetLeft(float arr[], const int n);
-void OfsetLeft(char arr[], const int n);
+void OffsetLeft(int arr[], const int n);
+void OffsetLeft(double arr[], const int n);	 /* Вопрос #1 к Олегу Анатольевичу :
+												почему программа работает с обявлением "arr" конкретно здесь, после "double", 
+												ведь в реализации прописан массив с именем "brr", и по логике следовало бы объявлять
+												void OfsetLeft(double brr[], const int n) */
+void OffsetLeft(float arr_l[], const int n);
+void OffsetLeft(char arr[], const int n);
+void OffsetRight(int arr[], const int n);
+void OffsetRight(double arr[], const int n);
+void OffsetRight(float arr[], const int n);
+void OffsetRight(char arr[], const int n);
 
 void Print(int arr[], const int n);
 void Print(double arr[], const int n);
@@ -27,6 +31,7 @@ void Sort(int arr[], const int n);
 void Sort(double arr[], const int n);
 void Sort(float frr[], const int m);
 void Sort(char crr[], const int s);
+
 
 int Sum(int arr[], const int n);
 double Sum(double arr[], const int n);
@@ -54,12 +59,20 @@ void main()
 	setlocale(LC_ALL, "Rus");
 	const int n = 5;
 	int arr[n];
+	int arr_l[n];
 	cout <<"\t\t" << "Реализация одномерного массива типа int:\n";
 	FillRand(arr, n);
 	Print(arr, n);
 	Sort(arr, n);
 	Print(arr, n);
-	OfsetLeft(arr, n);
+
+	for (int i = 0; i < n; i++)		//эту махинацию пришлось задействовать, чтобы создать доп. массив (копию arr)
+	{ 								// Без этого получалось так, что операцией смещения вправо, смещался массив
+		arr_l[i] = arr[i];			// который до этого смещался влево, а не отсортированный первоисточник arr
+	}
+
+	OffsetLeft(arr_l, n);
+	OffsetRight(arr, n);
 	cout << "Сумма элементов массива: "<< Sum(arr, n) << endl;
 	cout << "Ср. арифм. элементов массива: "<< AVG(arr, n) << endl;
 	cout << "Миним. знач. элементов массива: "<< minValueIn(arr, n) << endl;
@@ -68,11 +81,19 @@ void main()
 	cout <<"\t\t" << "Реализация одномерного массива типа double:\n";
 	const int SIZE = 8;
 	double brr[SIZE];
+	double brr_l[SIZE];
 	FillRand(brr, SIZE);
 	Print(brr, SIZE);
 	Sort(brr, SIZE);
 	Print(brr, SIZE);
-	OfsetLeft(brr, SIZE);
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		brr_l[i] = brr[i];
+	}
+
+	OffsetLeft(brr_l, SIZE);
+	OffsetRight(brr, SIZE);
 	cout << "Сумма элементов массива: "<< Sum(brr, SIZE) << endl;
 	cout << "Ср. арифм. элементов массива: "<< AVG(brr, SIZE) << endl;
 	cout << "Миним. знач. элементов массива: "<< minValueIn(brr, SIZE) << endl;
@@ -88,11 +109,19 @@ void main()
 	cout <<"\t\t" << "Реализация одномерного массива типа float:\n";
 	const int m = 6;
 	float frr[m];
+	float frr_l[m];
 	FillRand(frr, m);
 	Print(frr, m);
 	Sort(frr, m);
 	Print(frr, m);
-	OfsetLeft(frr, m);
+
+	for (int i = 0; i < m; i++)
+	{
+		frr_l[i] = frr[i];
+	}
+
+	OffsetLeft(frr_l, m);
+	OffsetRight(frr, m);
 	cout << "Сумма элементов массива: " << Sum(frr, m) << endl;
 	cout << "Ср. арифм. элементов массива: " << AVG(frr, m) << endl;
 	cout << "Миним. знач. элементов массива: " << minValueIn(frr, m) << endl;
@@ -101,11 +130,19 @@ void main()
 	cout <<"\t\t" << "Реализация одномерного массива типа char:\n";
 	const int s = 7;
 	char crr[s];
+	char crr_l[s];
 	FillRand(crr, s);
 	Print(crr, s);
 	Sort(crr, s);
 	Print(crr, s);
-	OfsetLeft(crr, s);
+
+	for (int i = 0; i < m; i++)
+	{
+		crr_l[i] = crr[i];
+	}
+
+	OffsetLeft(crr_l, s);
+	OffsetRight(crr, s);
 	cout << "Сумма элементов массива: " << Sum(crr, s) << endl;
 	cout << "Ср. арифм. элементов массива: " << AVG(crr, s) << endl;
 	cout << "Миним. знач. элементов массива: " << minValueIn(crr, s) << endl;
@@ -256,6 +293,7 @@ void Sort(char crr[], const int s)
 		}
 	}
 }
+
 int Sum(int arr[], const int n)
 {
 	int sum = 0;
@@ -406,7 +444,7 @@ char maxValueIn(char crr[], const int s)
 	return max;
 }
 
-void OfsetLeft(int arr[], const int n)
+void OffsetLeft(int arr_l[], const int n)
 {
 	int t = 0;
 	const int q = 5; /* Вопрос #2 к Олегу Анатольевичу: как можно связать значения "q" и "b",
@@ -416,15 +454,119 @@ void OfsetLeft(int arr[], const int n)
 	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
 	for (int i = 0; i < q; i++)
 	{
-		ar2[i] = arr[i];
+		ar2[i] = arr_l[i];
 	}
 	for (int i = 0; i < n - t; i++)
 	{
-		arr[i] = arr[i + t];
+		arr_l[i] = arr_l[i + t];
 	}
 	for (int i = n - t; i < n; i++)
 	{
-		arr[i] = ar2[i-n+t];
+		arr_l[i] = ar2[i-n+t];
+	}
+	cout << "Вывод смещенного массива: \n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << arr_l[i] << "\t";
+	}
+	cout << endl;
+}
+
+void OffsetLeft(double brr_l[], const int n)
+{
+	int t = 0;
+	const int q = 8;
+	double ar2[q];
+	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	for (int i = 0; i < q; i++)
+	{
+		ar2[i] = brr_l[i];
+	}
+	for (int i = 0; i < n - t; i++)
+	{
+		brr_l[i] = brr_l[i + t];
+	}
+	for (int i = n - t; i < n; i++)
+	{
+		brr_l[i] = ar2[i - n + t];
+	}
+	cout << "Вывод смещенного массива: \n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << brr_l[i] << "\t";
+	}
+	cout << endl;
+}
+
+void OffsetLeft(float frr_l[], const int n)
+{
+	int t = 0;
+	const int q = 6;
+	float ar2[q];
+	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	for (int i = 0; i < q; i++)
+	{
+		ar2[i] = frr_l[i];
+	}
+	for (int i = 0; i < n - t; i++)
+	{
+		frr_l[i] = frr_l[i + t];
+	}
+	for (int i = n - t; i < n; i++)
+	{
+		frr_l[i] = ar2[i - n + t];
+	}
+	cout << "Вывод смещенного массива: \n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << frr_l[i] << "\t";
+	}
+	cout << endl;
+}
+
+void OffsetLeft(char crr_l[], const int n)
+{
+	int t = 0;
+	const int q = 7;
+	char ar2[q];
+	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	for (int i = 0; i < q; i++)
+	{
+		ar2[i] = crr_l[i];
+	}
+	for (int i = 0; i < n - t; i++)
+	{
+		crr_l[i] = crr_l[i + t];
+	}
+	for (int i = n - t; i < n; i++)
+	{
+		crr_l[i] = ar2[i - n + t];
+	}
+	cout << "Вывод смещенного массива: \n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << crr_l[i] << "\t";
+	}
+	cout << endl;
+}
+
+void OffsetRight(int arr[], const int n)
+{
+	int t = 0;
+	const int q = 5;
+	int ar2[q];
+	cout << "Введите значение смещения отсортированного массива вправо: "; cin >> t;
+	for (int i = 0; i < q; i++)
+	{
+		ar2[i] = arr[i];
+	}
+	for (int i = 0; i <t; i++)
+	{
+		arr[i] = ar2[n-t+i];
+	}
+	for (int i = t; i < n; i++)
+	{
+		arr[i] = ar2[i-t];
 	}
 	cout << "Вывод смещенного массива: \n";
 	for (int i = 0; i < n; i++)
@@ -434,23 +576,23 @@ void OfsetLeft(int arr[], const int n)
 	cout << endl;
 }
 
-void OfsetLeft(double brr[], const int n)
+void OffsetRight(double brr[], const int n)
 {
 	int t = 0;
 	const int q = 8;
 	double ar2[q];
-	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	cout << "Введите значение смещения отсортированного массива вправо: "; cin >> t;
 	for (int i = 0; i < q; i++)
 	{
 		ar2[i] = brr[i];
 	}
-	for (int i = 0; i < n - t; i++)
+	for (int i = 0; i < t; i++)
 	{
-		brr[i] = brr[i + t];
+		brr[i] = ar2[n - t + i];
 	}
-	for (int i = n - t; i < n; i++)
+	for (int i = t; i < n; i++)
 	{
-		brr[i] = ar2[i - n + t];
+		brr[i] = ar2[i - t];
 	}
 	cout << "Вывод смещенного массива: \n";
 	for (int i = 0; i < n; i++)
@@ -460,23 +602,23 @@ void OfsetLeft(double brr[], const int n)
 	cout << endl;
 }
 
-void OfsetLeft(float frr[], const int n)
+void OffsetRight(float frr[], const int n)
 {
 	int t = 0;
 	const int q = 6;
 	float ar2[q];
-	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	cout << "Введите значение смещения отсортированного массива вправо: "; cin >> t;
 	for (int i = 0; i < q; i++)
 	{
 		ar2[i] = frr[i];
 	}
-	for (int i = 0; i < n - t; i++)
+	for (int i = 0; i < t; i++)
 	{
-		frr[i] = frr[i + t];
+		frr[i] = ar2[n - t + i];
 	}
-	for (int i = n - t; i < n; i++)
+	for (int i = t; i < n; i++)
 	{
-		frr[i] = ar2[i - n + t];
+		frr[i] = ar2[i - t];
 	}
 	cout << "Вывод смещенного массива: \n";
 	for (int i = 0; i < n; i++)
@@ -486,23 +628,23 @@ void OfsetLeft(float frr[], const int n)
 	cout << endl;
 }
 
-void OfsetLeft(char crr[], const int n)
+void OffsetRight(char crr[], const int n)
 {
 	int t = 0;
 	const int q = 7;
 	char ar2[q];
-	cout << "Введите значение смещения отсортированного массива влево: "; cin >> t;
+	cout << "Введите значение смещения отсортированного массива вправо: "; cin >> t;
 	for (int i = 0; i < q; i++)
 	{
 		ar2[i] = crr[i];
 	}
-	for (int i = 0; i < n - t; i++)
+	for (int i = 0; i < t; i++)
 	{
-		crr[i] = crr[i + t];
+		crr[i] = ar2[n - t + i];
 	}
-	for (int i = n - t; i < n; i++)
+	for (int i = t; i < n; i++)
 	{
-		crr[i] = ar2[i - n + t];
+		crr[i] = ar2[i - t];
 	}
 	cout << "Вывод смещенного массива: \n";
 	for (int i = 0; i < n; i++)

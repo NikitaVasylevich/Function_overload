@@ -10,10 +10,13 @@ void FillRand(int arr[ROWS][COLS], const int ROWS,const int COLS);
 void FillRand(float frr[], const int m);
 void FillRand(char crr[], const int s);
 void OffsetLeft(int arr[], const int n);
-void OffsetLeft(double arr[], const int n);	 /* Вопрос #1 к Олегу Анатольевичу :
-											почему программа работает с обявлением "arr" конкретно здесь, после "double", 
-											ведь в реализации прописан массив с именем "brr", и по логике следовало бы объявлять
-											void OfsetLeft(double brr[], const int n) */
+void OffsetLeft(double arr[], const int n);	 
+
+/* Вопрос #1 к Олегу Анатольевичу :
+почему программа работает с обявлением "arr" конкретно здесь, после "double", 
+ведь в реализации прописан массив с именем "brr", и по логике следовало бы объявлять
+void OfsetLeft(double brr[], const int n) */
+
 void OffsetLeft(float arr_l[], const int n);
 void OffsetLeft(char arr[], const int n);
 void OffsetRight(int arr[], const int n);
@@ -66,10 +69,13 @@ void main()
 	Sort(arr, n);
 	Print(arr, n);
 
-	for (int i = 0; i < n; i++)		//так пришлось сделать, чтобы создать доп. массив (копию arr);
-	{ 							// без этого получалось так, что операцией смещения вправо, смещался массив
-		arr_l[i] = arr[i];		// который до этого смещался влево, а не отсортированный первоисточник arr
+	for (int i = 0; i < n; i++)		
+	{
+		arr_l[i] = arr[i];		
 	}
+	/* так пришлось сделать, чтобы создать доп.массив(копию arr); 
+	без этого получалось так, что операцией смещения вправо, смещался массив
+	который до этого смещался влево, а не отсортированный первоисточник arr */
 
 	OffsetLeft(arr_l, n);
 	OffsetRight(arr, n);
